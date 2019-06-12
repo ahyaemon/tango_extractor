@@ -15,7 +15,7 @@
   ```
 
 ## 使用したデータについて
-- [はてなキーワード](http://developer.hatena.ne.jp/ja/documents/keyword/misc/catalog) からダウンロードさせていただいたデータを使用
+- [はてなキーワード様](http://developer.hatena.ne.jp/ja/documents/keyword/misc/catalog) からダウンロードさせていただいたデータを使用
 
 ## 他
 - データベースにデータを入れるときに [hiragana] 列と [tango] 列を間違えて逆にしてしまったけど面倒だからそのまま

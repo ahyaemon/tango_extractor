@@ -29,12 +29,12 @@
     </tr>
     </thead>
     <tbody>
-    {#each data_list as data, i (i)}
+    {#each data_list as data, i}
         <tr>
             <td>{first_number + i}</td>
             <td>{data.id}</td>
-            <td><b>{data.tango}</b></td>
-            <td>{data.hiragana}</td>
+            <td><b>{data.hiragana}</b></td>
+            <td>{data.tango}</td>
         </tr>
     {/each}
     </tbody>
