@@ -1,1 +1,1 @@
-web: node __sapper__/buildg
+web: node __sapper__/build
