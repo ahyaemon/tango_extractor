@@ -1,1 +1,1 @@
-web: start
+web: node __sapper__/buildg
