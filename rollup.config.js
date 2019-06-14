@@ -7,7 +7,6 @@ import { terser } from 'rollup-plugin-terser';
 import config from 'sapper/config/rollup.js';
 import pkg from './package.json';
 import json from 'rollup-plugin-json';
-// import autoPreprocess from 'svelte-preprocess'
 
 const mode = process.env.NODE_ENV;
 const dev = mode === 'development';
@@ -80,6 +79,12 @@ export default {
 			// 		'node_modules/moment-timezone/**'
 			// 	],
 			// })
+			json({
+				include: [
+					'node_modules/axios/**',
+				],
+			})
+
 		],
 		external: Object.keys(pkg.dependencies).concat(
 			require('module').builtinModules || Object.keys(process.binding('natives'))
