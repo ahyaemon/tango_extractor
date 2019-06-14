@@ -6,7 +6,7 @@ import * as sapper from '@sapper/server';
 const { PORT, NODE_ENV } = process.env;
 const dev = NODE_ENV === 'development';
 
-if (dev) {
+if (!dev) {
 	const https = require('https');
 	const url = "https://tango-extractor.herokuapp.com/";
 	const interval = 1000 * 60 * 15;
