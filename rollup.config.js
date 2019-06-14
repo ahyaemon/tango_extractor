@@ -73,12 +73,6 @@ export default {
 			}),
 			resolve(),
 			commonjs(),
-			// json({
-			// 	include: [
-			// 		'node_modules/Sequelize/**',
-			// 		'node_modules/moment-timezone/**'
-			// 	],
-			// })
 			json({
 				include: [
 					'node_modules/axios/**',
@@ -90,22 +84,4 @@ export default {
 			require('module').builtinModules || Object.keys(process.binding('natives'))
 		),
 	},
-
-	serviceworker: {
-		input: config.serviceworker.input(),
-		output: config.serviceworker.output(),
-		plugins: [
-			resolve(),
-			replace({
-				'process.browser': true,
-				'process.env.NODE_ENV': JSON.stringify(mode)
-			}),
-			commonjs(),
-			!dev && terser()
-		]
-	},
-
-	plugins: [
-	]
-
 };
