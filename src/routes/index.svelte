@@ -50,24 +50,63 @@
 			update();
 		}
 	}
+
+	function all() {
+		const keys = Object.keys(store.condition);
+		for (let key of keys) {
+			store.condition[key].checked = true;
+		}
+		update();
+	}
+
+	function none() {
+		const keys = Object.keys(store.condition);
+		for (let key of keys) {
+			store.condition[key].checked = false;
+		}
+		update();
+	}
+
+	function zero() {
+		const keys = Object.keys(store.condition);
+		for (let key of keys) {
+			store.condition[key].amount = 0;
+		}
+		update();
+	}
 </script>
 
 <style>
 	.condition {
-		width: 530px;
+		max-width: 440px;
 	}
 
 	.consonant {
 		display: inline-block;
+		border: 1px solid grey;
 	}
 
 	.tango-table {
 		display: inline-block;
 		margin: 20px;
 	}
+
+	.normal-button {
+		padding: 4px;
+		margin: 0 0 4px 0;
+		border: 2px solid grey;
+		border-radius: 2px;
+		background-color: white;
+	}
 </style>
 
 <div>
+	<div>
+		<button class="normal-button" on:click={all}>all</button>
+		<button class="normal-button" on:click={none}>none</button>
+		<button class="normal-button" on:click={zero}>0</button>
+
+	</div>
 	<div class="condition">
 		{#each mojis as moji}
 			<div class="consonant">
@@ -90,5 +129,11 @@
 		<div class="tango-table">
 			<TangoTable data_list={right_data} first_number="{(store.page - 1) * store.amount + store.amount /2 + 1}"/>
 		</div>
+	</div>
+
+	<div>
+		<button on:click={left}>◀</button>
+		<span>{store.page} / {page_amount}</span>
+		<button on:click={right}>▶</button>
 	</div>
 </div>

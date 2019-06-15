@@ -6,7 +6,7 @@
 	main {
 		position: relative;
 		background-color: white;
-		padding: 1em;
+		padding: 0 0 0 1em;
 		margin: 0 auto;
 		box-sizing: border-box;
 	}
