@@ -1,6 +1,6 @@
 import { Data} from "../dao/model/data";
 import { Op } from "sequelize";
-import { mojis } from "../mojis"
+import { mojis } from "../domain/moji"
 
 export async function get(req, res) {
     res.writeHead(200, {
