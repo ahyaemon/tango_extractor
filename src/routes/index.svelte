@@ -5,6 +5,7 @@
 <script>
 	import Condition from '../components/Condition.svelte'
 	import TangoTable from '../components/TangoTable.svelte'
+	import Spinner from '../components/Spinner.svelte'
 
 	import { mojis } from '../domain/moji'
 	import { default_condition } from '../domain/condition'
@@ -15,8 +16,13 @@
 	import { activate_all_condition, deactivate_all_condition, set_zero_condition } from '../store/_store'
 	import { increment_page, decrement_page, init_page } from '../store/_store'
 
+	import { fade } from 'svelte/transition'
+
 	async function create_table_data() {
+		data_exists = false;
 		await fetch();
+		data_exists = true;
+
 		const _data_list = get(data_list);
 		const _page = get(pagination).page;
 		const _amount = get(pagination).amount;
@@ -28,6 +34,7 @@
 		}
 	}
 
+	let data_exists = false;
 	let promise = create_table_data();
 
 	function condition_changed() {
@@ -90,6 +97,11 @@
 		border-radius: 2px;
 		background-color: white;
 	}
+
+	.spinner {
+		padding: 100px;
+		height: 100px;
+	}
 </style>
 
 <div>
@@ -114,9 +126,11 @@
 		<button on:click={right}>▶</button>
 	</div>
 	{#await promise}
-		<p>waiting</p>
+		<div class="spinner">
+<!--			<Spinner/>-->
+		</div>
 	{:then res}
-		<div>
+		<div transition:fade="{{duration:50}}">
 			<div class="tango-table">
 				<TangoTable data_list={res.left_data} first_number="{res.left_data_first_number}"/>
 			</div>

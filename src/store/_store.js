@@ -11,6 +11,8 @@ export const page_amount = derived(pagination, $p => Math.ceil($p.count / $p.amo
  * @returns {Promise<*>}
  */
 export const fetch = async () => {
+    // await new Promise(resolve => setTimeout(resolve, 1000 * 10));
+
     const _pagination = get(pagination);
     const params = {
         condition: get(condition),
