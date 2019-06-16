@@ -5,74 +5,73 @@
 <script>
 	import Condition from '../components/Condition.svelte'
 	import TangoTable from '../components/TangoTable.svelte'
+	import Spinner from '../components/Spinner.svelte'
 
-	import { onMount } from 'svelte'
-	import { fetch_data } from '../fetch'
-	import { mojis, default_condition } from '../mojis'
+	import { mojis } from '../domain/moji'
+	import { default_condition } from '../domain/condition'
+	import { default_pagination } from '../domain/pagination'
 
-	const store = {
-		condition: default_condition(),
-		data_list: [],
-		count: 0,
-		amount: 30,
-		page: 1,
-	};
+	import { get } from 'svelte/store';
+	import { data_list, condition, pagination, fetch, page_amount } from '../store/_store'
+	import { activate_all_condition, deactivate_all_condition, set_zero_condition } from '../store/_store'
+	import { increment_page, decrement_page, init_page } from '../store/_store'
 
-	$: page_amount = Math.ceil(store.count / store.amount);
-	$: left_data = store.data_list.slice(0, store.amount / 2);
-	$: right_data = store.data_list.slice(store.amount / 2, store.amount)
+	import { fade } from 'svelte/transition'
 
-	onMount(async () => {
-		update();
-	});
+	async function create_table_data() {
+		data_exists = false;
+		await fetch();
+		data_exists = true;
 
-	async function update() {
-		const res = await fetch_data(store.condition, store.page, store.amount);
-		store.data_list = res.rows;
-		store.count = res.count;
+		const _data_list = get(data_list);
+		const _page = get(pagination).page;
+		const _amount = get(pagination).amount;
+		return {
+			left_data: _data_list.slice(0, _amount / 2),
+			left_data_first_number: (_page - 1) * _amount + 1,
+			right_data: _data_list.slice(_amount / 2, _amount),
+			right_data_first_number: (_page - 1) * _amount + _amount /2 + 1,
+		}
 	}
 
+	let data_exists = false;
+	let promise = create_table_data();
+
 	function condition_changed() {
-	    store.page = 1;
-	    update();
+	    init_page();
+	    promise = create_table_data();
     }
 
 	function left() {
-		if (store.page >= 2) {
-			store.page -= 1;
-			update();
+		if (get(pagination).page >= 2) {
+			decrement_page();
+			promise = create_table_data();
 		}
 	}
 
 	function right() {
-		if (store.page <= page_amount - 1) {
-			store.page += 1;
-			update();
+		if (get(pagination).page <= get(page_amount) - 1) {
+			increment_page();
+			promise = create_table_data();
 		}
 	}
 
 	function all() {
-		const keys = Object.keys(store.condition);
-		for (let key of keys) {
-			store.condition[key].checked = true;
-		}
-		update();
+		activate_all_condition();
+		init_page();
+		promise = create_table_data();
 	}
 
 	function none() {
-		const keys = Object.keys(store.condition);
-		for (let key of keys) {
-			store.condition[key].checked = false;
-		}
-		update();
+		deactivate_all_condition();
+		init_page();
+		promise = create_table_data();
 	}
 
 	function zero() {
-		const keys = Object.keys(store.condition);
-		for (let key of keys) {
-			store.condition[key].amount = 0;
-		}
-		update();
+		set_zero_condition();
+		init_page();
+		promise = create_table_data();
 	}
 </script>
 
@@ -98,6 +97,11 @@
 		border-radius: 2px;
 		background-color: white;
 	}
+
+	.spinner {
+		padding: 100px;
+		height: 100px;
+	}
 </style>
 
 <div>
@@ -110,30 +114,35 @@
 	<div class="condition">
 		{#each mojis as moji}
 			<div class="consonant">
-				<Condition bind:consonant={store.condition[moji[0]]} on:change={condition_changed}>{moji[1]}</Condition>
+				<Condition bind:consonant={$condition[moji[0]]} on:change={condition_changed}>{moji[1]}</Condition>
 			</div>
 		{/each}
 	</div>
 
-	<p>{store.count} 件 ({store.amount} 件表示)</p>
+	<p>{$pagination.count} 件 ({$pagination.amount} 件表示)</p>
 	<div>
 		<button on:click={left}>◀</button>
-		<span>{store.page} / {page_amount}</span>
+		<span>{$pagination.page} / {$page_amount}</span>
 		<button on:click={right}>▶</button>
 	</div>
-
-	<div>
-		<div class="tango-table">
-			<TangoTable data_list={left_data} first_number={(store.page - 1) * store.amount + 1}/>
+	{#await promise}
+		<div class="spinner">
+<!--			<Spinner/>-->
 		</div>
-		<div class="tango-table">
-			<TangoTable data_list={right_data} first_number="{(store.page - 1) * store.amount + store.amount /2 + 1}"/>
+	{:then res}
+		<div transition:fade="{{duration:50}}">
+			<div class="tango-table">
+				<TangoTable data_list={res.left_data} first_number="{res.left_data_first_number}"/>
+			</div>
+			<div class="tango-table">
+				<TangoTable data_list={res.right_data} first_number="{res.right_data_first_number}"/>
+			</div>
 		</div>
-	</div>
+	{/await}
 
 	<div>
 		<button on:click={left}>◀</button>
-		<span>{store.page} / {page_amount}</span>
+		<span>{$pagination.page} / {$page_amount}</span>
 		<button on:click={right}>▶</button>
 	</div>
 </div>
