@@ -15,13 +15,6 @@
 	import { activate_all_condition, deactivate_all_condition, set_zero_condition } from '../store/_store'
 	import { increment_page, decrement_page, init_page } from '../store/_store'
 
-
-	const store = {
-		condition: default_condition,
-		data_list: [],
-		pagination: default_pagination,
-	};
-
 	async function create_table_data() {
 		await fetch();
 		const _data_list = get(data_list);
