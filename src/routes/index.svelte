@@ -6,8 +6,6 @@
 	import Condition from '../components/Condition.svelte'
 	import TangoTable from '../components/TangoTable.svelte'
 
-	import { onMount } from 'svelte'
-	import { fetch_data } from '../fetch'
 	import { mojis } from '../domain/moji'
 	import { default_condition } from '../domain/condition'
 	import { default_pagination } from '../domain/pagination'
@@ -52,7 +50,7 @@
 	}
 
 	function right() {
-		if (get(pagination).page <= page_amount - 1) {
+		if (get(pagination).page <= get(page_amount) - 1) {
 			increment_page();
 			promise = create_table_data();
 		}
@@ -60,16 +58,19 @@
 
 	function all() {
 		activate_all_condition();
+		init_page();
 		promise = create_table_data();
 	}
 
 	function none() {
 		deactivate_all_condition();
+		init_page();
 		promise = create_table_data();
 	}
 
 	function zero() {
 		set_zero_condition();
+		init_page();
 		promise = create_table_data();
 	}
 </script>

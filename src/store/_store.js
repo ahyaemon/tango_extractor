@@ -17,7 +17,17 @@ export const fetch = async () => {
         page: _pagination.page,
         amount: _pagination.amount,
     };
-    const res = await axios.get('index.json', { params });
+
+    let res = null;
+    try {
+        res = await axios.get('index.json', { params });
+    } catch (e) {
+        // server 側でも axios が実行されてしまい、エラーが発生する
+        // client 側のみで使用できればいいため、エラーが起こったら return する
+        // ※ 暫定対応
+        console.log(e.toString());
+        return
+    }
 
     data_list.set(res.data.rows);
     pagination.update(p => {
@@ -50,22 +60,22 @@ const update_moji_condition = (callback) => {
 };
 
 export const init_page = () => {
-    condition.update(c => {
-        c.page = 1;
-        return c;
+    pagination.update(p => {
+        p.page = 1;
+        return p;
     })
 };
 
 export const increment_page = () => {
-    condition.update(c => {
-        c.page += 1;
-        return c;
+    pagination.update(p => {
+        p.page += 1;
+        return p;
     })
 };
 
 export const decrement_page = () => {
-    condition.update(c => {
-        c.page -= 1;
-        return c;
+    pagination.update(p => {
+        p.page -= 1;
+        return p;
     })
-}
+};
