@@ -12,9 +12,10 @@
 	import { default_pagination } from '../domain/pagination'
 
 	import { get } from 'svelte/store';
-	import { data_list, condition, pagination, fetch, page_amount } from '../store/_store'
+	import { data_list, condition, pagination, fetch, page_amount, data_to_tsv } from '../store/_store'
 	import { activate_all_condition, deactivate_all_condition, set_zero_condition } from '../store/_store'
 	import { increment_page, decrement_page, init_page } from '../store/_store'
+	import { download } from '../download'
 
 	import { fade } from 'svelte/transition'
 
@@ -75,7 +76,8 @@
 	}
 
 	function download_tsv() {
-		console.log("download tsv");
+		const tsv = data_to_tsv();
+		download(tsv);
 	}
 </script>
 
