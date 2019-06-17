@@ -76,8 +76,8 @@
 	}
 
 	function download_tsv() {
-		const tsv = data_to_tsv();
-		download(tsv);
+		// const tsv = data_to_tsv();
+		download(get(condition));
 	}
 </script>
 
