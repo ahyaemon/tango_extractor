@@ -12,9 +12,10 @@
 	import { default_pagination } from '../domain/pagination'
 
 	import { get } from 'svelte/store';
-	import { data_list, condition, pagination, fetch, page_amount } from '../store/_store'
+	import { data_list, condition, pagination, fetch, page_amount, data_to_tsv } from '../store/_store'
 	import { activate_all_condition, deactivate_all_condition, set_zero_condition } from '../store/_store'
 	import { increment_page, decrement_page, init_page } from '../store/_store'
+	import { download } from '../download'
 
 	import { fade } from 'svelte/transition'
 
@@ -73,6 +74,11 @@
 		init_page();
 		promise = create_table_data();
 	}
+
+	function download_tsv() {
+		const tsv = data_to_tsv();
+		download(tsv);
+	}
 </script>
 
 <style>
@@ -98,6 +104,13 @@
 		background-color: white;
 	}
 
+	.tsv-button {
+		border-color: #ff9928;
+		color: #ff9928;
+		margin-left: 20px;
+		font-weight: bold;
+	}
+
 	.spinner {
 		padding: 100px;
 		height: 100px;
@@ -109,7 +122,7 @@
 		<button class="normal-button" on:click={all}>all</button>
 		<button class="normal-button" on:click={none}>none</button>
 		<button class="normal-button" on:click={zero}>0</button>
-
+		<button class="normal-button tsv-button" on:click={download_tsv}>TSV</button>
 	</div>
 	<div class="condition">
 		{#each mojis as moji}

@@ -81,3 +81,12 @@ export const decrement_page = () => {
         return p;
     })
 };
+
+export const data_to_tsv = () => {
+    let tsv = "";
+    for (const data of get(data_list)) {
+        const row = `${data.id}\t${data.hiragana}\t${data.tango}`;
+        tsv +=  row + "\n";
+    }
+    return tsv;
+};
